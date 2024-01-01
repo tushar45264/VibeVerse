@@ -6,7 +6,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import Prisma from "@/app/libs/prismadb";
 
-export const authOptions:AuthOptions={
+ const authOptions:AuthOptions={
     adapter:PrismaAdapter(Prisma),
     providers:[
         GithubProvider({
@@ -29,8 +29,8 @@ export const authOptions:AuthOptions={
                 }
                 const user =await Prisma.user.findUnique({
                     where:{
-                        email:credentials.email
-                    }
+                        email:credentials.email,
+                    },
                 });
                 if(!user ||!user?.hashedPassword){
                     throw new Error('Invalid Credentials');
