@@ -17,29 +17,25 @@ export async function POST(
             return new NextResponse('Unauthorized',{status:401});
         }
         const newMessage=await Prisma.message.create({
-            data:{
-                body:message,
-                image:image,
-                conversation:{
-                    connect:{
-                        id:conversationId
-                    }
+            include: {
+                seen: true,
+                Sender: true
+              },
+              data: {
+                body: message,
+                image: image,
+                conversation: {
+                  connect: { id: conversationId }
                 },
-                Sender:{
-                    connect:{
-                        id:currentUser.id
-                    }
+                Sender: {
+                  connect: { id: currentUser.id }
                 },
-                seen:{
-                    connect:{
-                        id:currentUser.id
-                    }
-                }
-            },
-            include:{
-                seen:true,
-                Sender:true,
-            }
+                seen: {
+                  connect: {
+                    id: currentUser.id
+                  }
+                },
+              }
         });
         const updatedConversation=await Prisma.conversation.update({
             where:{

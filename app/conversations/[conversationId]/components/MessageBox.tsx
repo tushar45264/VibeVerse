@@ -21,11 +21,12 @@ const MessageBox:React.FC<MessageBoxProps>=({
     const session=useSession();
     const [imageModalOpen,setImageModalOpen] =useState(false);
     const isOwn= session?.data?.user?.email===data?.Sender?.email;
+    console.log(data);
+    
     const seenList=(data.seen||[])
     .filter((user)=>user.email!=data?.Sender?.email)
     .map((user)=>user.name)
     .join(', ');
-    console.log(data.seen[0].name)
     const container=clsx(
         "flex gap-3 p-4 ",
         isOwn && "justify-end"

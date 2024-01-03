@@ -60,10 +60,14 @@ datasource db {
     body String?
     image String?
     createdAt DateTime @default(now())
-    conversationId String @db.ObjectId
-    conversation Conversation @relation(fields: [conversationId], references: [id],onDelete:Cascade)
-    SenderId String @db.ObjectId
-    Sender user @relation(fields: [SenderId], references: [id],onDelete:Cascade)
+
     seenIds String[] @db.ObjectId
     seen user[] @relation("seen",fields: [seenIds], references: [id])
+
+    conversationId String @db.ObjectId
+    conversation Conversation @relation(fields: [conversationId], references: [id],onDelete:Cascade)
+    
+    SenderId String @db.ObjectId
+    sender user @relation(fields: [SenderId], references: [id],onDelete:Cascade)
+    
     }
