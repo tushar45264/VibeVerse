@@ -68,6 +68,6 @@ datasource db {
     conversation Conversation @relation(fields: [conversationId], references: [id],onDelete:Cascade)
     
     SenderId String @db.ObjectId
-    sender user @relation(fields: [SenderId], references: [id],onDelete:Cascade)
+    Sender user @relation(fields: [SenderId], references: [id],onDelete:Cascade)
     
     }
