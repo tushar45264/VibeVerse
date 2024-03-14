@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+ model user{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String?
+  email String? @unique
+  emailVerified String?
+  image String?
+  hashedPassword String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  conversationIds String[] @db.ObjectId
+  conversations Conversation[] @relation(fields: [conversationIds], references: [id])
+  seenMessageIds String[] @db.ObjectId
+  seenMessages Message[] @relation("seen",fields: [seenMessageIds], references: [id])
+  accounts Account[]
+  messages Message[] 
+ }
+  model Account {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    type String 
+    provider String
+    providerAccountId String
+    userId String @db.ObjectId
+    refresh_token String? @db.String
+    access_token String? @db.String
+    expires_at Int?
+    token_type String?
+    scope String?
+    id_token String? @db.String
+    session_state String? 
+    user user @relation(fields: [userId], references: [id], onDelete: Cascade)
+    @@unique([provider,providerAccountId])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+  }
+  model Conversation {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    name String?
+    createdAt DateTime @default(now())
+    lastMessageAt DateTime @default(now())
+    isGroup Boolean?
+    messageIds String[] @db.ObjectId
+    messages Message[]
+    userIds String[] @db.ObjectId
+    users user[] @relation(fields: [userIds], references: [id])
+  }
+  model Message {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    body String?
+    image String?
+    createdAt DateTime @default(now())
+
+    seenIds String[] @db.ObjectId
+    seen user[] @relation("seen",fields: [seenIds], references: [id])
+
+    conversationId String @db.ObjectId
+    conversation Conversation @relation(fields: [conversationId], references: [id],onDelete:Cascade)
+    
+    SenderId String @db.ObjectId
+    Sender user @relation(fields: [SenderId], references: [id],onDelete:Cascade)
+    
+    }
